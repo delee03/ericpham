@@ -40,3 +40,6 @@ next-env.d.ts
 
 # generated audio master (regenerate with scripts/generate-ambient.py)
 /public/audio/*.wav
+
+# agent worktrees
+/.claude/worktrees/
