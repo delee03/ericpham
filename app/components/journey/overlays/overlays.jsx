@@ -276,7 +276,7 @@ export default function Overlays({ blogs, openDrawer }) {
                         >
                             ↺ Zoom out again
                         </button>
-                        <Link href="/plain#credits" className="inline-flex min-h-[44px] items-center text-[13px] text-muted underline underline-offset-4 hover:text-ink">
+                        <Link href="/plain#credits" className="inline-flex min-h-[44px] items-center rounded-full bg-void/70 px-4 text-[13px] text-soft underline underline-offset-4 backdrop-blur-sm hover:text-ink">
                             Image credits
                         </Link>
                     </div>
