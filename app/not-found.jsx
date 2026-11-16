@@ -1,21 +1,21 @@
-// @flow strict
-
 import Link from "next/link";
 
-function page() {
-  return (
-    <div className="flex flex-col items-center justify-center h-screen text-center">
-      <h1 className="text-6xl font-bold text-gray-800 dark:text-gray-100">404</h1>
-      <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">Page Not Found</p>
-      <p className="mt-2 text-gray-500 dark:text-gray-400">Sorry, the page you are looking for does not exist.</p>
-      <Link className="mt-5 flex items-center gap-1 hover:gap-3 rounded-full bg-gradient-to-r from-pink-500 to-violet-600 px-3 md:px-8 py-3 text-center text-xs md:text-sm font-medium uppercase tracking-wider text-white no-underline transition-all duration-200 ease-out hover:text-white hover:no-underline md:font-semibold"
-        role="button" 
-        href="/"
-      >
-        Go to Home
-      </Link>
-    </div>
-  );
-};
+export const metadata = { title: "Lost in space - Thuận Phát" };
 
-export default page;
+export default function NotFound() {
+    return (
+        <main className="site-stars flex min-h-screen flex-col items-center justify-center gap-4 px-6 text-center">
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-sky">404 · Signal lost</p>
+            <h1 className="font-display text-4xl font-light text-gold sm:text-5xl">
+                There is nothing at these coordinates.
+            </h1>
+            <p className="max-w-md text-muted">The page you are looking for does not exist or has moved.</p>
+            <Link
+                href="/"
+                className="mt-2 inline-flex min-h-[44px] items-center rounded-full border border-gold/60 px-6 text-sm text-gold transition-colors hover:bg-gold/10"
+            >
+                Back to the start
+            </Link>
+        </main>
+    );
+}
