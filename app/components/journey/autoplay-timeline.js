@@ -6,20 +6,20 @@ export const TRACK_SECONDS = 42;
 
 export const AUTOPLAY_KEYS = [
     [0, 0],
-    [3, 0], // hold You
-    [6, 1], // -> Saigon
-    [9, 1],
-    [12, 2], // -> Earth
-    [16, 2],
-    [19, 3], // -> planets
-    [23.5, 3],
-    [28, 4], // -> Pale Blue Dot, slow and quiet
-    [28.8, 4],
-    [30, 5], // -> Milky Way, with the swell
-    [30.4, 5],
-    [31.5, 6], // -> Cosmic web
-    [32, 6],
-    [33.5, 7], // snap back on the drop
+    [2.5, 0], // hold You
+    [5, 1], // -> Saigon
+    [8, 1],
+    [10.5, 2], // -> Earth
+    [14.5, 2],
+    [17, 3], // -> planets
+    [21.5, 3],
+    [24, 4], // -> Pale Blue Dot, arriving on the sub boom
+    [26.5, 4],
+    [28.5, 5], // -> Milky Way, inside the swell
+    [30, 5],
+    [32, 6], // -> Cosmic web, arriving as the music drops away
+    [37, 6], // the message holds in the near silence
+    [38.6, 7], // snap back under the last bells
     [TRACK_SECONDS, 7],
 ];
 
