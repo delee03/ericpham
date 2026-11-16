@@ -34,3 +34,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# graft local graph cache — regenerable, not committed (run `graft build`).
+/graft/
+
+# generated audio master (regenerate with scripts/generate-ambient.py)
+/public/audio/*.wav
