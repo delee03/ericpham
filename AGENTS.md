@@ -7,101 +7,85 @@
 ## Project
 
 Personal developer portfolio for **Phạm Tiến Thuận Phát** (English name: Eric).
-Single-page Next.js site with sections for About, Experience, Education,
-Skills, Projects, Contact, plus a stub Blog page that pulls articles from
-dev.to. Deployed by pushing to `main` (Vercel-style auto-deploy assumed).
+The homepage is a scroll-driven "zoom-out journey" (desk → Saigon → Earth →
+planets → Pale Blue Dot → Milky Way → cosmic web → back to the desk and the
+contact form). `/plain` holds the same content as a plain scrollable page and
+`/blog` lists dev.to articles. Deployed by merging to `main` (Vercel and
+Netlify both build from it).
 
-Repository: `git@github.com:delee03/fuderrdev.git`
+Repository: `git@github.com:delee03/ericpham.git` (formerly `fuderrdev`)
 Default branch: `main`
 
 ## Stack
 
 - **Next.js 15.5.18** (App Router) — pinned for CVE remediation, do not downgrade
 - **React 19.0.0**
-- **Tailwind CSS** + SCSS for styling
+- **Tailwind CSS 3** + a small `app/css/globals.scss`
+- **three.js + React Three Fiber + drei + postprocessing**, **Lenis** for the journey
 - **ESLint** via `next lint` (no flat config; uses `.eslintrc.json`)
-- **Nodemailer** + Google reCAPTCHA for the contact form
+- **Nodemailer** for the contact form (Gmail SMTP)
+- `.npmrc` sets `legacy-peer-deps=true`; clean installs fail without it
 - **No test runner is configured** — verification is `npm run lint` and `npm run build`
 
 ## The map — where to make changes
 
-### Content (~90% of edits go here)
+### Content (most edits go here)
 
-All site content is data-driven from JS modules under `utils/data/`. Editing one of
-these files is the only thing needed for most content updates.
+All content is data-driven from JS modules under `utils/data/`. Both the journey
+and the plain page read from them, so one edit updates both.
 
-| Visible section / element                 | File                                          | Notes                                                                 |
-| ------------------------------------------ | --------------------------------------------- | --------------------------------------------------------------------- |
-| Name, photo, role, summary, social links, resume URL | `utils/data/personal-data.js`        | Single source of truth for personal info                              |
-| Hero `skills: [...]` "code block"          | `app/components/homepage/hero-section/index.jsx` | **Hardcoded JSX** — see Gotchas below                              |
-| Experience cards                           | `utils/data/experience.js`                    | Most recent first                                                     |
-| Education + Certificates                   | `utils/data/educations.js`                    | Single list (degree + certs), reverse-chronological                  |
-| Skills grid                                | `utils/data/skills.js`                        | Strings only render if mapped in `skill-image.js` — see Gotchas       |
-| Projects                                   | `utils/data/projects-data.js`                 | Most recent first; `tools[]` renders as plain text (no icon required) |
-| Contact section / footer links             | `utils/data/contactsData.js`                  | Email + socials                                                       |
-| Page `<title>` and OG description          | `app/layout.js`                               | Two near-identical strings to keep in sync                            |
-| Header brand text                          | `app/components/navbar.jsx`                   | "Thuận Phát" — see Gotcha 3                                           |
-| Footer credit text                         | `app/components/footer.jsx`                   |                                                                       |
+| Content                                              | File                           | Notes                                                        |
+| ---------------------------------------------------- | ------------------------------ | ------------------------------------------------------------ |
+| Name, photo, role, summary, social links, resume URL | `utils/data/personal-data.js`  | Single source of truth for personal info                     |
+| Journey levels, captions, hero copy, flyby projects  | `utils/data/journey.js`        | One entry per scale level, in scroll order                   |
+| Experience cards                                     | `utils/data/experience.js`     | Most recent first; the first entry is shown as current       |
+| Education + certificates                             | `utils/data/educations.js`     | Single list, reverse-chronological                           |
+| Skills                                               | `utils/data/skills.js`         | `skillGroups`, rendered as text                              |
+| Projects                                             | `utils/data/projects-data.js`  | Most recent first; `code`/`demo` links render when non-empty |
+| Contact details                                      | `utils/data/contactsData.js`   | Email + socials                                              |
+| Page `<title>` and description                       | `app/layout.js`                | `metadata` export                                            |
 
-### Components
+### Pages and components
 
 ```
-app/components/
-├── footer.jsx
-├── navbar.jsx
-├── helper/                  # scroll-to-top, glow-card, lottie wrappers
-└── homepage/
-    ├── about/
-    ├── blog/                # pulls dev.to articles via API route
-    ├── contact/
-    ├── education/
-    ├── experience/
-    ├── hero-section/
-    ├── projects/            # has project-card.jsx + single-project.jsx
-    └── skills/
+app/
+├── layout.js            # fonts, metadata; renders no chrome
+├── page.js              # homepage (the journey)
+├── plain/page.js        # all content, no 3D; skip target and fallback
+├── blog/page.js         # dev.to articles
+├── not-found.jsx
+├── api/contact/route.js # POST: contact form → Nodemailer (+ optional Telegram)
+└── components/
+    └── site/            # shared chrome: header, footer, panel, section,
+                         # blog card, contact form
+utils/blog.js            # dev.to fetch (cached 1h, never throws)
+scripts/generate-ambient.py  # regenerates the journey's ambient track
 ```
 
-Each section has an `index.jsx` that renders the corresponding `utils/data/*.js`
-content.
+### Design tokens
+
+Defined in `tailwind.config.js`: colours `void`, `ink`, `soft`, `muted`, `dim`,
+`sky`, `gold`, `line`, `field`, `panel`; fonts `font-display` (Space Grotesk),
+`font-sans` (Inter), `font-mono` (JetBrains Mono). Fonts load in `app/layout.js`
+with the Vietnamese subset — keep it, the name needs those glyphs.
 
 ### Static assets
 
-| Path                              | What it is                                                |
-| --------------------------------- | --------------------------------------------------------- |
-| `public/profile.png`              | Current avatar — replace this file to update the photo    |
-| `public/profile_fallback.png`     | Original avatar — recovery copy, **do not delete**        |
-| `public/image/`, `public/png/`    | Section illustrations and project thumbnails              |
-| `public/*.svg`                    | Background graphics (`hero.svg`, `top-bg.svg`, etc.)      |
-| `app/favicon.ico`                 | Site favicon                                              |
-| `app/assets/svg/skills/`          | Tech-icon SVGs used by Skills grid (mapped in `skill-image.js`) |
-| `app/assets/lottie/`              | Lottie JSON animations                                    |
+| Path                          | What it is                                             |
+| ----------------------------- | ------------------------------------------------------ |
+| `public/profile.png`          | Current avatar — replace this file to update the photo |
+| `public/profile_fallback.png` | Original avatar — recovery copy, **do not delete**     |
+| `public/audio/ambient.m4a`    | 42 s ambient track for the journey's auto-play mode    |
+| `app/favicon.ico`             | Site favicon                                           |
 
-### API routes
-
-```
-app/api/
-├── contact/route.js   # POST: contact form → Nodemailer
-├── data/route.js      # GET: internal data fetch (dev.to articles)
-└── google/route.js    # POST: reCAPTCHA verification
-```
-
-## Common tasks (copy-paste-ready workflows)
+## Common tasks
 
 ### Update content (new project, new cert, change role, etc.)
 
 1. Edit the relevant `utils/data/*.js` file.
-2. If touching skills, also reorder/update the **hardcoded** array in
-   `app/components/homepage/hero-section/index.jsx` to keep both in sync.
-3. `npm run lint` — must be clean.
-4. Commit with conventional-commit subject (see Conventions).
-5. `git push origin main` — Vercel auto-deploys.
-
-### Add a brand-new skill icon to the Skills grid
-
-1. Drop the SVG into `app/assets/svg/skills/<name>.svg`.
-2. Add an `import` line and a `case '<lowercased name>':` branch to
-   `utils/skill-image.js` (the `switch` matches on `skill.toLowerCase()`).
-3. Add the display name to `utils/data/skills.js`.
+2. `npm run lint` — must be clean.
+3. Commit with a conventional-commit subject.
+4. Open a PR and merge it to `main` (rebase merge, atomic commits).
 
 ### Bump a dependency for a CVE
 
@@ -109,19 +93,18 @@ app/api/
 2. `npm run build` must succeed end-to-end.
 3. Commit: `chore(deps): bump <pkg> to <version> for <CVE-id-or-reason>`.
 
+### Contact form environment
+
+`.env.example` lists the variables. `EMAIL_ADDRESS` and `GMAIL_PASSKEY` (a Gmail
+app password) are required; the Telegram pair is optional and best-effort.
+
 ## Conventions
 
-### Branching and push
-
-- Direct push to `main` is acceptable for small content tweaks.
-- For larger changes, create a feature branch and open a PR via `gh pr create`.
-- Remote is SSH (`git@github.com:delee03/fuderrdev.git`); no `gh` auth needed for `git push`.
-
-### Code style
-
-- Match the surrounding file. Mostly JSX (`.jsx`), some `.js` modules.
-- Tailwind utility classes live inline; no CSS-in-JS.
-- ESLint flat-config-equivalent via `next lint`; do not introduce a separate ESLint config.
+- Work on a branch and merge through a PR with `gh pr merge --rebase`, keeping
+  commits atomic. Direct pushes to `main` are fine only for tiny content tweaks.
+- Match the surrounding file. JSX (`.jsx`) and `.js` modules, no TypeScript.
+- Tailwind utility classes inline; use the design tokens rather than raw hex.
+- Do not introduce a separate ESLint config.
 
 ### Verification
 
@@ -131,42 +114,34 @@ npm run lint     # required before commit
 npm run build    # required after dep bumps or component changes
 ```
 
-## Gotchas (read these — they will bite you)
+## Gotchas
 
-### 1. Skill icons require a lowercase mapping in `skill-image.js`
-
-`utils/skill-image.js` does `skill.toLowerCase()` then a `switch`. **Any skill
-listed in `skills.js` without a matching `case` renders as blank** in the Skills
-grid. Project `tools[]` arrays are different — they render as plain text and
-work without an icon mapping.
-
-### 2. The Hero `skills:` array is hardcoded JSX, not data-driven
-
-`app/components/homepage/hero-section/index.jsx` contains a literal sequence of
-`<span>` elements forming the `skills: ['…', '…', …]` line. It is not generated
-from `utils/data/skills.js`. When you change skills, update **both** files.
-
-### 3. Branding name: "Thuận Phát" first, "Eric" as the English name
+### 1. Branding name: "Thuận Phát" first, "Eric" as the English name
 
 - **Primary name everywhere (header, hero, footer):** "Thuận Phát"; the full
   form is "Phạm Tiến Thuận Phát" (`personalData.fullName`).
 - **"Eric"** is the English name (`personalData.englishName`). Show it as a
-  secondary label next to the Vietnamese name (e.g. "Thuận Phát (Eric)"), never
+  secondary label next to the Vietnamese name (e.g. "English name: Eric"), never
   as a replacement, so it is clear both names are the same person.
-- Social handles containing `ericpham03` are real accounts — see Gotcha 4.
 
-### 4. Social usernames are split between two real accounts
+### 2. Social usernames are split between real accounts
 
-- `ericpham03` — Facebook, X/Twitter (current handle)
-- `fuderrpham03` / `fuderrpham` / `fuderr-pham` — StackOverflow, LeetCode, dev.to
-  (legacy account names that are still real, working URLs — **do not rename**)
+- `ericpham03` — Facebook, X/Twitter, dev.to
+- `fuderrpham` / `fuderr-pham` — StackOverflow, LeetCode (legacy names that are
+  still real, working URLs — **do not rename**)
 - `delee03` — GitHub username (do not change)
 
-### 5. Two near-identical metadata strings in `app/layout.js`
+### 3. The dev.to key is `devUserName`
 
-The page `<title>` text and the `<meta name="description">` content are
-near-duplicates of the OG `metadata.title` / `metadata.description` strings at
-the top of the file. When updating site name or description, edit **both**.
+`personalData.devUserName` (capital N). A typo here once made the blog query
+dev.to as `username=undefined`. Use `getBlogs()` from `utils/blog.js` instead of
+fetching directly.
+
+### 4. Content must exist on the plain page too
+
+`/plain` is the fallback for reduced-motion users and browsers without WebGL,
+and the page recruiters skim. Anything added to the journey must also appear
+there.
 
 ## Don'ts
 
@@ -176,4 +151,3 @@ the top of the file. When updating site name or description, edit **both**.
 - Don't add a test runner without asking the maintainer first.
 - Don't introduce a separate ESLint config — `next lint` handles everything.
 - Don't reformat unrelated files when making a small content change.
-
