@@ -51,7 +51,7 @@ export default async function PlainPage() {
                 {/* Hero */}
                 <section aria-labelledby="hero-title" className="grid items-center gap-10 py-14 sm:py-24 md:grid-cols-[1fr_auto]">
                     <div>
-                        <p className="font-mono text-xs uppercase tracking-[0.2em] text-sky">{heroCopy.coordinates}</p>
+                        <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-sky sm:text-xs sm:tracking-[0.2em]">{heroCopy.coordinates}</p>
                         <h1
                             id="hero-title"
                             className="mt-4 font-display text-4xl font-light leading-tight sm:text-6xl"
