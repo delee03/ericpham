@@ -123,4 +123,8 @@ export const imageCredits = [
         label: "Planet textures: Solar System Scope (CC BY 4.0)",
         href: "https://www.solarsystemscope.com/textures/",
     },
+    {
+        label: "Map data © OpenStreetMap contributors",
+        href: "https://www.openstreetmap.org/copyright",
+    },
 ];
