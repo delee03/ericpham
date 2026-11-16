@@ -6,7 +6,7 @@
 
 ## Project
 
-Personal developer portfolio for **Eric Phạm** (Phạm Tiến Thuận Phát).
+Personal developer portfolio for **Phạm Tiến Thuận Phát** (English name: Eric).
 Single-page Next.js site with sections for About, Experience, Education,
 Skills, Projects, Contact, plus a stub Blog page that pulls articles from
 dev.to. Deployed by pushing to `main` (Vercel-style auto-deploy assumed).
@@ -40,7 +40,7 @@ these files is the only thing needed for most content updates.
 | Projects                                   | `utils/data/projects-data.js`                 | Most recent first; `tools[]` renders as plain text (no icon required) |
 | Contact section / footer links             | `utils/data/contactsData.js`                  | Email + socials                                                       |
 | Page `<title>` and OG description          | `app/layout.js`                               | Two near-identical strings to keep in sync                            |
-| Header brand text                          | `app/components/navbar.jsx`                   | Currently "Eric Pham" (no diacritic, intentional)                     |
+| Header brand text                          | `app/components/navbar.jsx`                   | "Thuận Phát" — see Gotcha 3                                           |
 | Footer credit text                         | `app/components/footer.jsx`                   |                                                                       |
 
 ### Components
@@ -146,14 +146,14 @@ work without an icon mapping.
 `<span>` elements forming the `skills: ['…', '…', …]` line. It is not generated
 from `utils/data/skills.js`. When you change skills, update **both** files.
 
-### 3. Branding name has two intentional forms
+### 3. Branding name: "Thuận Phát" first, "Eric" as the English name
 
-- **Header (navbar):** "Eric Pham" — no diacritic, by design
-- **Everywhere else:** "Eric Phạm" — with diacritic
-- **Page `<title>` and OG description:** still uses the full Vietnamese name
-  "Phạm Tiến Thuận Phát"
-
-When updating display names, respect these distinctions instead of normalizing.
+- **Primary name everywhere (header, hero, footer):** "Thuận Phát"; the full
+  form is "Phạm Tiến Thuận Phát" (`personalData.fullName`).
+- **"Eric"** is the English name (`personalData.englishName`). Show it as a
+  secondary label next to the Vietnamese name (e.g. "Thuận Phát (Eric)"), never
+  as a replacement, so it is clear both names are the same person.
+- Social handles containing `ericpham03` are real accounts — see Gotcha 4.
 
 ### 4. Social usernames are split between two real accounts
 

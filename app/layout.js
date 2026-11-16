@@ -10,9 +10,9 @@ import "./css/globals.scss";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-    title: "Portfolio of Phạm Tiến Thuận Phát - Full Stack Engineer",
+    title: "Phạm Tiến Thuận Phát (Eric) - Cloud Solutions Architect & AI Engineer",
     description:
-        "This is the portfolio of Phạm Tiến Thuận Phát (Eric Phạm). I am a full stack engineer and a self taught developer. I love to learn new things and I am always open to collaborating with others. I am a fast learner and I am always looking for new challenges.",
+        "Portfolio of Phạm Tiến Thuận Phát (English name: Eric), a Cloud Solutions Architect and AI engineer in Ho Chi Minh City. I design cloud systems on AWS and build multi-agent AI.",
 };
 
 export default function RootLayout({ children }) {
@@ -21,11 +21,11 @@ export default function RootLayout({ children }) {
             <head>
                 <link rel="icon" href="/favicon.png" type="image/x-icon" />
                 <title>
-                    Portfolio of Phạm Tiến Thuận Phát - Full Stack Engineer
+                    Phạm Tiến Thuận Phát (Eric) - Cloud Solutions Architect &amp; AI Engineer
                 </title>
                 <meta
                     name="description"
-                    content="This is the portfolio of Phạm Tiến Thuận Phát (Eric Phạm). I am a full stack engineer and a self taught developer. I love to learn new things and I am always open to collaborating with others. I am a fast learner and I am always looking for new challenges."
+                    content="Portfolio of Phạm Tiến Thuận Phát (English name: Eric), a Cloud Solutions Architect and AI engineer in Ho Chi Minh City. I design cloud systems on AWS and build multi-agent AI."
                 />
             </head>
             <body className={inter.className}>

@@ -1,15 +1,15 @@
 export const experiences = [
     {
         id: 1,
-        title: "Fresher Software Engineer",
-        company: "Katalon Inc",
-        duration: "(Aug 2025 - Present)",
+        title: "Cloud Solutions Architect",
+        company: "VIB Bank (IT AWS)",
+        duration: "(Jun 2026 - Present)",
     },
     {
         id: 2,
-        title: "Software Engineer Intern",
+        title: "Software Engineer",
         company: "Katalon Inc",
-        duration: "(Feb 2025 - Aug 2025)",
+        duration: "(Feb 2025 - May 2026)",
     },
     {
         id: 3,

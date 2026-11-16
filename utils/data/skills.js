@@ -16,6 +16,22 @@ export const skillsData = [
     "Git",
 ];
 
+// Grouped skills for the text-based skills panel (no icon mapping required).
+export const skillGroups = [
+    {
+        label: "AI & Agents",
+        items: ["Bedrock", "MCP", "A2A", "AG-UI", "CopilotKit", "Langfuse"],
+    },
+    {
+        label: "Cloud & DevOps",
+        items: ["AWS", "Kubernetes", "Docker", "Terraform", "Helm", "ArgoCD", "Linux", "Git"],
+    },
+    {
+        label: "Product Engineering",
+        items: ["Python", "TypeScript", "JavaScript", "Next.js", "React", "NestJS", "Java", ".NET Core", "Flutter", "MongoDB", "MySQL"],
+    },
+];
+
 // Choose your skills from below. Make sure it's in the same format and spelled correctly.
 // Couldn't find the required skills? Raise an issue on github at https://github.com/hhhrrrttt222111/developer-portfolio/issues/new
 
