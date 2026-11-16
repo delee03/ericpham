@@ -13,6 +13,7 @@ function ContactForm() {
     name: "",
     email: "",
     message: "",
+    company: "", // honeypot: real users never see or fill this
   });
 
   const checkRequired = () => {
@@ -36,18 +37,22 @@ function ContactForm() {
     try {
       setIsLoading(true);
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/contact`,
+        "/api/contact",
         userInput
       );
 
-      toast.success("Message sent successfully!");
+      toast.success(res?.data?.message || "Message sent successfully!");
       setUserInput({
         name: "",
         email: "",
         message: "",
+        company: "",
       });
     } catch (error) {
-      toast.error(error?.response?.data?.message);
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again later."
+      );
     } finally {
       setIsLoading(false);
     };
@@ -59,6 +64,16 @@ function ContactForm() {
       <div className="max-w-3xl text-white rounded-lg border border-[#464c6a] p-3 lg:p-5">
         <p className="text-sm text-[#d3d8e8]">{"If you have any questions or concerns, please don't hesitate to contact me. I am open to any work opportunities that align with my skills and interests."}</p>
         <div className="mt-6 flex flex-col gap-4">
+          <input
+            type="text"
+            name="company"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+            value={userInput.company}
+            onChange={(e) => setUserInput({ ...userInput, company: e.target.value })}
+          />
           <div className="flex flex-col gap-2">
             <label className="text-base">Your Name: </label>
             <input
@@ -93,7 +108,7 @@ function ContactForm() {
             <label className="text-base">Your Message: </label>
             <textarea
               className="bg-[#10172d] w-full border rounded-md border-[#353a52] focus:border-[#16f2b3] ring-0 outline-0 transition-all duration-300 px-3 py-2"
-              maxLength="500"
+              maxLength="2000"
               name="message"
               required={true}
               onChange={(e) => setUserInput({ ...userInput, message: e.target.value })}
