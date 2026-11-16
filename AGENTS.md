@@ -56,8 +56,18 @@ app/
 ├── not-found.jsx
 ├── api/contact/route.js # POST: contact form → Nodemailer (+ optional Telegram)
 └── components/
-    └── site/            # shared chrome: header, footer, panel, section,
-                         # blog card, contact form
+    ├── site/            # shared chrome: header, footer, panel, section,
+    │                    # blog card, contact form
+    └── journey/         # the homepage journey
+        ├── journey.jsx          # client shell; reduced motion / no WebGL → /plain
+        ├── journey-engine.js    # scroll, tween and auto-play modes (one rAF loop)
+        ├── journey-store.js     # mutable per-frame state, minimal React subscriptions
+        ├── scroll-map.js        # scroll ↔ level position, hold and travel zones
+        ├── autoplay-timeline.js # [seconds, level] keyframes tuned to the audio track
+        ├── stage.jsx            # R3F canvas, offscreen scene targets, zoom compositor
+        ├── hud/                 # header, scale readout, scale bar, prev/next
+        ├── overlays/            # per-level HTML content and the "More" drawer
+        └── scenes/              # one 3D scene per level — read scenes/README.md
 utils/blog.js            # dev.to fetch (cached 1h, never throws)
 scripts/generate-ambient.py  # regenerates the journey's ambient track
 ```
@@ -76,6 +86,8 @@ with the Vietnamese subset — keep it, the name needs those glyphs.
 | `public/profile.png`          | Current avatar — replace this file to update the photo |
 | `public/profile_fallback.png` | Original avatar — recovery copy, **do not delete**     |
 | `public/audio/ambient.m4a`    | 42 s ambient track for the journey's auto-play mode    |
+| `public/textures/*.webp`      | 2K planet textures (Solar System Scope, CC BY 4.0)     |
+| `public/saigon/lights.bin`    | Street-light points from OpenStreetMap (ODbL)          |
 | `app/favicon.ico`             | Site favicon                                           |
 
 ## Common tasks
@@ -86,6 +98,24 @@ with the Vietnamese subset — keep it, the name needs those glyphs.
 2. `npm run lint` — must be clean.
 3. Commit with a conventional-commit subject.
 4. Open a PR and merge it to `main` (rebase merge, atomic commits).
+
+### Change or add a journey scene
+
+1. Read `app/components/journey/scenes/README.md` (camera, framing, the
+   `progress` ref, `meta.origin`).
+2. Edit the scene file; scenes never create a canvas, read scroll or touch the DOM.
+3. Keep the left ~45% (desktop) / upper half (mobile) visually quiet — the HTML
+   content sits there.
+4. Check it in a real browser at desktop and phone sizes, at the hold and
+   mid-zoom, then `npm run lint` and `npm run build`.
+
+### Regenerate generated assets
+
+- Ambient track: `python3 scripts/generate-ambient.py public/audio/ambient.wav`
+  (needs numpy + scipy), then encode to `ambient.m4a`. If the track's shape
+  changes, retune `autoplay-timeline.js`.
+- Saigon street lights: `node scripts/generate-saigon-lights.mjs` (queries
+  OpenStreetMap's Overpass API) → `public/saigon/lights.bin`.
 
 ### Bump a dependency for a CVE
 
@@ -142,6 +172,12 @@ fetching directly.
 `/plain` is the fallback for reduced-motion users and browsers without WebGL,
 and the page recruiters skim. Anything added to the journey must also appear
 there.
+
+### 5. Third-party imagery must stay credited
+
+The planet textures (CC BY 4.0) and the OpenStreetMap data (ODbL) require
+attribution. Credits live in `imageCredits` in `utils/data/journey.js` and
+render in the footer; add an entry whenever a new third-party asset is added.
 
 ## Don'ts
 
