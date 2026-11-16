@@ -118,4 +118,9 @@ export const flybyProjects = [
 ];
 
 // Third-party imagery used by the scenes; shown in the footer credits.
-export const imageCredits = [];
+export const imageCredits = [
+    {
+        label: "Planet textures: Solar System Scope (CC BY 4.0)",
+        href: "https://www.solarsystemscope.com/textures/",
+    },
+];
