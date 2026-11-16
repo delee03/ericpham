@@ -26,3 +26,16 @@ body {
   // padding-top: calc(var(--index) * 2.5rem);
   top: calc(var(--index) * 4rem);
 }
+// Static starfield for the plain pages (no JS, no animation).
+.site-stars {
+  background-color: #05060a;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, rgba(236, 239, 247, 0.7), transparent 100%),
+    radial-gradient(1px 1px at 78% 12%, rgba(236, 239, 247, 0.55), transparent 100%),
+    radial-gradient(1.5px 1.5px at 44% 40%, rgba(142, 197, 255, 0.6), transparent 100%),
+    radial-gradient(1px 1px at 90% 55%, rgba(236, 239, 247, 0.5), transparent 100%),
+    radial-gradient(1px 1px at 25% 72%, rgba(255, 208, 138, 0.5), transparent 100%),
+    radial-gradient(1px 1px at 62% 85%, rgba(236, 239, 247, 0.6), transparent 100%),
+    radial-gradient(1.5px 1.5px at 6% 92%, rgba(142, 197, 255, 0.5), transparent 100%);
+  background-size: 420px 420px;
+}
