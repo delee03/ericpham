@@ -13,7 +13,6 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
     const [blogs, setBlogs] = useState([]);
-    console.log(personalData.devUserName);
     useEffect(() => {
         const fetchBlogs = async () => {
             try {
