@@ -1,65 +1,52 @@
-// @flow strict
+import BlogCard from "@/app/components/site/blog-card";
+import SiteFooter from "@/app/components/site/site-footer";
+import SiteHeader from "@/app/components/site/site-header";
+import { devToProfileUrl, getBlogs } from "@/utils/blog";
 
-import { personalData } from "@/utils/data/personal-data";
-import BlogCard from "../components/homepage/blog/blog-card";
+export const metadata = {
+    title: "Writing - Thuận Phát (Eric)",
+    description: "Articles by Thuận Phát (Eric) on cloud, AI agents and software engineering, from dev.to.",
+};
 
-async function getBlogs() {
-    try {
-        const res = await fetch(
-            `https://dev.to/api/articles?username=${personalData.devUserName}`,
-            { next: { revalidate: 3600 } }
-        );
-        if (!res.ok) {
-            return { blogs: [], failed: true };
-        }
-        const data = await res.json();
-        return { blogs: Array.isArray(data) ? data : [], failed: false };
-    } catch (error) {
-        console.error("Failed to fetch dev.to articles:", error.message);
-        return { blogs: [], failed: true };
-    }
-}
-
-async function page() {
+export default async function BlogPage() {
     const { blogs, failed } = await getBlogs();
-    const devUrl = `https://dev.to/${personalData.devUserName}`;
 
     return (
-        <div className="py-8">
-            <div className="flex justify-center my-5 lg:py-8">
-                <div className="flex  items-center">
-                    <span className="w-24 h-[2px] bg-[#1a1443]"></span>
-                    <span className="bg-[#1a1443] w-fit text-white p-2 px-5 text-2xl rounded-md">
-                        All Blog
-                    </span>
-                    <span className="w-24 h-[2px] bg-[#1a1443]"></span>
-                </div>
-            </div>
-
-            {blogs.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-5 lg:gap-8 xl:gap-10">
-                    {blogs.map((blog) => (
-                        <BlogCard blog={blog} key={blog.id ?? blog.url} />
-                    ))}
-                </div>
-            ) : (
-                <p className="text-center text-[#d3d8e8]">
-                    {failed
-                        ? "Couldn't load articles, "
-                        : "No articles yet. "}
-                    <a
-                        className="text-[#16f2b3] underline"
-                        href={devUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        {failed ? "read them on dev.to" : "Visit dev.to"}
-                    </a>
-                    .
+        <div className="site-stars min-h-screen">
+            <SiteHeader current="writing" />
+            <main className="mx-auto max-w-6xl px-4 py-14 sm:px-8 sm:py-20">
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-sky">Transmissions</p>
+                <h1 className="mt-3 font-display text-3xl font-light text-gold sm:text-5xl">Writing</h1>
+                <p className="mt-3 max-w-2xl text-muted">
+                    Notes on cloud, AI agents and engineering, published on dev.to.
                 </p>
-            )}
+
+                <div className="mt-10">
+                    {blogs.length > 0 ? (
+                        <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                            {blogs.map((blog) => (
+                                <li key={blog.id ?? blog.url}>
+                                    <BlogCard blog={blog} />
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="text-soft">
+                            {failed ? "The articles could not be loaded right now. " : "No articles yet. "}
+                            <a
+                                href={devToProfileUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex min-h-[44px] items-center text-sky underline"
+                            >
+                                {failed ? "Read them on dev.to" : "Visit dev.to"}
+                            </a>
+                            .
+                        </p>
+                    )}
+                </div>
+            </main>
+            <SiteFooter />
         </div>
     );
 }
-
-export default page;
