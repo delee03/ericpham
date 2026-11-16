@@ -87,15 +87,16 @@ export const aboutShort = [
     "Next: scene understanding for autonomous driving and efficient deep learning at the edge.",
 ];
 
-// Project highlights for the planet flyby, in the order the planets are passed.
+// Project highlights for the planet flyby, most recent first, in the order the
+// planets are passed.
 // `projectId` refers to utils/data/projects-data.js; the remaining projects
 // appear in the "More" drawer and on the plain page.
 export const flybyProjects = [
     {
         planet: "Moon",
-        projectId: 4,
-        title: "Auto Audit by AI",
-        blurb: "PCI DSS and ISO 27001 audit automation. VPBank Hackathon 2025 finalist.",
+        projectId: 1,
+        title: "Katalon AI Platform",
+        blurb: "Multi-agent orchestration, RAG and LLM test automation: FastAPI services over A2A and MCP.",
     },
     {
         planet: "Mars",
@@ -111,9 +112,9 @@ export const flybyProjects = [
     },
     {
         planet: "Saturn",
-        projectId: 1,
-        title: "Katalon AI Platform",
-        blurb: "Multi-agent orchestration, RAG and LLM test automation: FastAPI services over A2A and MCP.",
+        projectId: 4,
+        title: "Auto Audit by AI",
+        blurb: "PCI DSS and ISO 27001 audit automation. VPBank Hackathon 2025 finalist.",
     },
 ];
 
