@@ -217,32 +217,17 @@ export default function Overlays({ blogs, openDrawer }) {
                                 ))}
                             </li>
                         </ul>
-                        <button type="button" onClick={() => openDrawer("education")} className={MORE_BTN}>
-                            More: education and certificates
-                        </button>
-                    </div>
-                    {latestBlogs.length > 0 && (
-                        <div className={`${PANEL} flex flex-col gap-1.5 px-5 py-3.5 md:px-[26px] md:py-[18px]`}>
-                            <p className={LABEL}>TRANSMISSIONS</p>
-                            <ul className="flex flex-col">
-                                {latestBlogs.map((b) => (
-                                    <li key={b.id ?? b.url}>
-                                        <a
-                                            href={b.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="line-clamp-1 flex min-h-[32px] items-center text-sm text-soft transition-colors hover:text-sky md:min-h-[36px]"
-                                        >
-                                            {b.title}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                            <Link href="/blog" className="text-[13px] text-sky underline underline-offset-4">
-                                All writing
-                            </Link>
+                        <div className="flex flex-wrap gap-2.5">
+                            <button type="button" onClick={() => openDrawer("education")} className={MORE_BTN}>
+                                Education and certificates
+                            </button>
+                            {latestBlogs.length > 0 && (
+                                <button type="button" onClick={() => openDrawer("writing")} className={MORE_BTN}>
+                                    Transmissions
+                                </button>
+                            )}
                         </div>
-                    )}
+                    </div>
                 </section>
             </Level>
 
@@ -283,13 +268,18 @@ export default function Overlays({ blogs, openDrawer }) {
                             </a>
                         </div>
                     </div>
-                    <button
-                        type="button"
-                        onClick={() => engine.goTo(0)}
-                        className="min-h-[44px] self-start rounded-full border border-ink/35 px-5 text-sm text-ink hover:border-sky"
-                    >
-                        ↺ Zoom out again
-                    </button>
+                    <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
+                        <button
+                            type="button"
+                            onClick={() => engine.goTo(0)}
+                            className="min-h-[44px] self-start rounded-full border border-ink/35 px-5 text-sm text-ink hover:border-sky"
+                        >
+                            ↺ Zoom out again
+                        </button>
+                        <Link href="/plain#credits" className="inline-flex min-h-[44px] items-center text-[13px] text-muted underline underline-offset-4 hover:text-ink">
+                            Image credits
+                        </Link>
+                    </div>
                 </section>
             </Level>
         </main>

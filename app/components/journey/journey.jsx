@@ -8,7 +8,7 @@ import Header from "./hud/header";
 import { Controls, Readout, ScaleBar } from "./hud/hud";
 import { engine } from "./journey-engine";
 import Drawer from "./overlays/drawer";
-import { AboutMore, EducationMore, ProjectsMore } from "./overlays/more-content";
+import { AboutMore, EducationMore, ProjectsMore, WritingMore } from "./overlays/more-content";
 import Overlays from "./overlays/overlays";
 import { preloadAround } from "./scenes";
 
@@ -19,6 +19,7 @@ const DRAWERS = {
     about: { title: `About ${personalData.name}`, Body: AboutMore },
     projects: { title: "All projects", Body: ProjectsMore },
     education: { title: "Education and certificates", Body: EducationMore },
+    writing: { title: "Transmissions", Body: WritingMore },
 };
 
 function hasWebGL() {
@@ -75,7 +76,7 @@ export default function Journey({ blogs = [] }) {
             </div>
             {Object.entries(DRAWERS).map(([key, { title, Body }]) => (
                 <Drawer key={key} open={drawer === key} onClose={close} title={title}>
-                    <Body />
+                    <Body blogs={blogs} />
                 </Drawer>
             ))}
             <noscript>
