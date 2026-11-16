@@ -15,7 +15,7 @@ export default function SiteFooter() {
                     </Link>
                 </div>
                 {imageCredits.length > 0 && (
-                    <p className="text-xs text-dim">
+                    <p id="credits" className="scroll-mt-24 text-xs text-dim">
                         Image credits:{" "}
                         {imageCredits.map((c, i) => (
                             <span key={c.href}>

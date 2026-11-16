@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { educations } from "@/utils/data/educations";
 import { personalData } from "@/utils/data/personal-data";
 import { projectsData } from "@/utils/data/projects-data";
@@ -52,5 +53,29 @@ export function EducationMore() {
                 </li>
             ))}
         </ul>
+    );
+}
+
+export function WritingMore({ blogs = [] }) {
+    return (
+        <div className="flex flex-col gap-5">
+            <ul className="flex flex-col gap-4">
+                {blogs.map((b) => (
+                    <li key={b.id ?? b.url} className="border-b border-line pb-4 last:border-b-0">
+                        <a
+                            href={b.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-display text-[17px] font-medium text-ink underline-offset-4 hover:text-sky hover:underline"
+                        >
+                            {b.title}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+            <Link href="/blog" className="inline-flex min-h-[44px] items-center self-start text-sm text-sky underline underline-offset-4">
+                All writing
+            </Link>
+        </div>
     );
 }
