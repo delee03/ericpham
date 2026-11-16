@@ -1,6 +1,8 @@
-import { redirect } from "next/navigation";
+import Journey from "./components/journey/journey";
+import { getBlogs } from "@/utils/blog";
 
-// Temporary: the zoom-out journey replaces this redirect when its shell lands.
-export default function Home() {
-    redirect("/plain");
+// Server component: fetch dev.to articles once (cached), render the journey shell.
+export default async function Home() {
+    const { blogs } = await getBlogs();
+    return <Journey blogs={blogs.slice(0, 3).map(({ id, title, url }) => ({ id, title, url }))} />;
 }
