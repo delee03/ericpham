@@ -2,6 +2,12 @@
 
 import { isValidEmail } from "@/utils/check-email";
 import { useState } from "react";
+import Turnstile from "./turnstile";
+
+// Cloudflare Turnstile site key (public by design). The matching secret lives
+// in TURNSTILE_SECRET_KEY on the host; the server only enforces the check when
+// that is set.
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAAGE57sAJB1Q-04vh";
 
 const EMPTY = { name: "", email: "", message: "", company: "" };
 
@@ -14,6 +20,14 @@ export default function ContactForm() {
     const [values, setValues] = useState(EMPTY);
     const [status, setStatus] = useState("idle"); // idle | sending | sent
     const [error, setError] = useState("");
+    // The widget loads on first focus, so the third-party script stays off the
+    // page until someone starts writing. `attempt` remounts it for a new token.
+    const [armed, setArmed] = useState(false);
+    const [token, setToken] = useState("");
+    const [attempt, setAttempt] = useState(0);
+    // Set when the widget cannot run here (e.g. localhost or a preview domain);
+    // the form then sends without a token and the server decides.
+    const [widgetFailed, setWidgetFailed] = useState(false);
 
     const set = (key) => (e) => {
         setValues((v) => ({ ...v, [key]: e.target.value }));
@@ -33,13 +47,18 @@ export default function ContactForm() {
             setError("Please enter a valid email address.");
             return;
         }
+        if (!token && !widgetFailed) {
+            setArmed(true);
+            setError("Please wait for the verification check to finish, then send again.");
+            return;
+        }
 
         setStatus("sending");
         try {
             const res = await fetch("/api/contact", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ...values, name, email, message }),
+                body: JSON.stringify({ ...values, name, email, message, "cf-turnstile-response": token }),
             });
             const data = await res.json().catch(() => ({}));
             if (!res.ok || !data.success) {
@@ -50,6 +69,10 @@ export default function ContactForm() {
         } catch (err) {
             setError(err.message || "Something went wrong. Please try again later.");
             setStatus("idle");
+        } finally {
+            // Tokens are single use: get a fresh one for the next send.
+            setToken("");
+            setAttempt((n) => n + 1);
         }
     };
 
@@ -74,7 +97,7 @@ export default function ContactForm() {
     const sending = status === "sending";
 
     return (
-        <form onSubmit={submit} noValidate className="flex flex-col gap-3.5">
+        <form onSubmit={submit} onFocus={() => setArmed(true)} noValidate className="flex flex-col gap-3.5">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <label className="flex flex-col gap-1.5 text-[13px] text-muted">
                     Your name
@@ -126,6 +149,15 @@ export default function ContactForm() {
                 onChange={set("company")}
                 className="absolute -left-[9999px] h-px w-px opacity-0"
             />
+            {armed && !widgetFailed && (
+                <Turnstile
+                    key={attempt}
+                    siteKey={TURNSTILE_SITE_KEY}
+                    action="contact"
+                    onToken={setToken}
+                    onError={() => setWidgetFailed(true)}
+                />
+            )}
             {error && (
                 <p role="alert" className="text-sm text-[#FF9E9E]">
                     {error}

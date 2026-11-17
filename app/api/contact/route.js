@@ -45,6 +45,39 @@ const generateEmailTemplate = (name, email, userMessage) => `
   </div>
 `;
 
+// Hostnames the Turnstile widget may be solved on (never localhost).
+const turnstileHostnames = (process.env.TURNSTILE_ALLOWED_HOSTNAMES || 'phamtienthuanphat.com,www.phamtienthuanphat.com')
+  .split(',')
+  .map((h) => h.trim().toLowerCase())
+  .filter(Boolean);
+
+// Checks a Cloudflare Turnstile token with Cloudflare. The token must be valid,
+// issued for the "contact" action and solved on one of our hostnames.
+async function verifyTurnstile(secret, token, ip) {
+  try {
+    const body = new URLSearchParams({ secret, response: token });
+    if (ip) body.set('remoteip', ip);
+    const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      body,
+      signal: AbortSignal.timeout(5000),
+    });
+    const data = await res.json();
+    if (data.success !== true) {
+      console.error('Turnstile rejected the token:', (data['error-codes'] || []).join(', '));
+      return false;
+    }
+    if (data.action !== 'contact' || !turnstileHostnames.includes(String(data.hostname).toLowerCase())) {
+      console.error('Turnstile token has the wrong action or hostname:', data.action, data.hostname);
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error('Turnstile verification error:', error.message);
+    return false;
+  }
+}
+
 const bad = (message) =>
   NextResponse.json({ success: false, message }, { status: 400 });
 
@@ -80,6 +113,19 @@ export async function POST(request) {
   if (cleanEmail.length > 100) return bad('Email must be 100 characters or fewer.');
   if (!isValidEmail(cleanEmail)) return bad('Please provide a valid email.');
   if (cleanMessage.length > 2000) return bad('Message must be 2000 characters or fewer.');
+
+  // Bot check: enforced whenever TURNSTILE_SECRET_KEY is set.
+  const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
+  if (turnstileSecret) {
+    const token = payload['cf-turnstile-response'];
+    if (typeof token !== 'string' || !token || token.length > 2048) {
+      return bad('Verification is required. Please try again.');
+    }
+    const ip = (request.headers.get('x-forwarded-for') || '').split(',')[0].trim();
+    if (!(await verifyTurnstile(turnstileSecret, token, ip))) {
+      return bad('Verification failed. Please try again.');
+    }
+  }
 
   const emailAddress = process.env.EMAIL_ADDRESS;
   const gmailPass = process.env.GMAIL_PASSKEY;
