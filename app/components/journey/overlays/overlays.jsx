@@ -251,10 +251,6 @@ export default function Overlays({ blogs, openDrawer }) {
                     <div className={`${PANEL} flex flex-col gap-3 px-[18px] py-4 md:gap-3.5 md:px-[26px] md:py-6`}>
                         <ContactForm />
                         <div className="text-[13px] leading-[1.7] text-muted md:text-sm">
-                            <a href={`mailto:${contactsData.email}`} className="hover:text-ink">
-                                {contactsData.email}
-                            </a>
-                            {" · "}
                             {contactsData.address}
                             <br />
                             <a href={contactsData.github} target="_blank" rel="noopener noreferrer" className="text-sky hover:text-ink">
