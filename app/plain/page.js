@@ -229,15 +229,8 @@ export default async function PlainPage() {
                             <ContactForm />
                         </Panel>
                         <Panel>
-                            <h3 className="font-mono text-xs uppercase tracking-[0.14em] text-sky">Direct</h3>
-                            <ul className="mt-3 space-y-1 text-soft">
-                                <li>
-                                    <a href={`tel:${contactsData.phone.replace(/\s/g, "")}`} className={extLink}>
-                                        {contactsData.phone}
-                                    </a>
-                                </li>
-                                <li className="py-2.5">{contactsData.address}</li>
-                            </ul>
+                            <h3 className="font-mono text-xs uppercase tracking-[0.14em] text-sky">Based in</h3>
+                            <p className="mt-3 text-soft">{contactsData.address}</p>
                             <h3 className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-sky">Elsewhere</h3>
                             <ul className="mt-3 flex flex-wrap gap-x-5">
                                 {socials.map((s) => (
