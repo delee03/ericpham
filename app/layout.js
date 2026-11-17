@@ -21,7 +21,7 @@ const mono = JetBrains_Mono({
 // Absolute base for share-preview URLs (og:image etc.) on Vercel, Netlify or locally.
 const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : process.env.URL || "https://phamtienthuanphat.vercel.app";
+    : process.env.URL || "https://phamtienthuanphat.com";
 
 const title = "Phạm Tiến Thuận Phát (Eric) - Cloud Solutions Architect & AI Engineer";
 const description =
