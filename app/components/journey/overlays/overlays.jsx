@@ -68,6 +68,8 @@ export default function Overlays({ blogs, openDrawer }) {
     };
     const latestBlogs = (blogs || []).slice(0, 3);
     const awsCerts = educations.filter((e) => e.institution === "Amazon Web Services");
+    const practitionerCerts = awsCerts.filter((e) => /Practitioner/.test(e.title));
+    const mainCerts = awsCerts.filter((e) => !/Practitioner/.test(e.title));
     const [msgA, msgB] = (caption(6) || "").split(/,\s*/);
 
     return (
@@ -202,12 +204,12 @@ export default function Overlays({ blogs, openDrawer }) {
                         ))}
                         <div className="h-px bg-sky/20" />
                         <ul className="grid grid-cols-1 gap-1 text-[13px] text-gold md:grid-cols-2 md:gap-2.5 md:text-sm">
-                            {awsCerts.slice(0, 2).map((c) => (
+                            {mainCerts.map((c) => (
                                 <li key={c.id}>★ AWS {certName(c)}</li>
                             ))}
                             {/* On mobile the two practitioner certs share one line. */}
                             <li className="md:contents">
-                                {awsCerts.slice(2).map((c, k) => (
+                                {practitionerCerts.map((c, k) => (
                                     <span key={c.id} className="md:block">
                                         {k > 0 && <span className="md:hidden"> · </span>}
                                         <span className={k > 0 ? "max-md:hidden" : ""}>★ </span>
