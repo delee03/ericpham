@@ -1,6 +1,7 @@
 import { GoogleTagManager } from "@next/third-parties/google";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./css/globals.scss";
+import { shareMeta } from "@/utils/share-meta";
 
 const display = Space_Grotesk({
     subsets: ["latin", "vietnamese"],
@@ -17,10 +18,20 @@ const mono = JetBrains_Mono({
     variable: "--font-mono",
 });
 
+// Absolute base for share-preview URLs (og:image etc.) on Vercel, Netlify or locally.
+const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.URL || "https://phamtienthuanphat.vercel.app";
+
+const title = "Phạm Tiến Thuận Phát (Eric) - Cloud Solutions Architect & AI Engineer";
+const description =
+    "Portfolio of Phạm Tiến Thuận Phát (English name: Eric), a Cloud Solutions Architect and AI engineer in Ho Chi Minh City. I design cloud systems on AWS and build multi-agent AI.";
+
 export const metadata = {
-    title: "Phạm Tiến Thuận Phát (Eric) - Cloud Solutions Architect & AI Engineer",
-    description:
-        "Portfolio of Phạm Tiến Thuận Phát (English name: Eric), a Cloud Solutions Architect and AI engineer in Ho Chi Minh City. I design cloud systems on AWS and build multi-agent AI.",
+    metadataBase: new URL(siteUrl),
+    title,
+    description,
+    ...shareMeta({ title, description, url: "/" }),
 };
 
 export const viewport = {

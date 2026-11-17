@@ -2,10 +2,16 @@ import BlogCard from "@/app/components/site/blog-card";
 import SiteFooter from "@/app/components/site/site-footer";
 import SiteHeader from "@/app/components/site/site-header";
 import { devToProfileUrl, getBlogs } from "@/utils/blog";
+import { shareMeta } from "@/utils/share-meta";
+
+const title = "Writing - Thuận Phát (Eric)";
+const description =
+    "Articles by Thuận Phát (Eric) on cloud, AI agents and software engineering, from dev.to.";
 
 export const metadata = {
-    title: "Writing - Thuận Phát (Eric)",
-    description: "Articles by Thuận Phát (Eric) on cloud, AI agents and software engineering, from dev.to.",
+    title,
+    description,
+    ...shareMeta({ title, description, url: "/blog" }),
 };
 
 export default async function BlogPage() {
