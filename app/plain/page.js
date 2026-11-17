@@ -14,11 +14,16 @@ import { heroCopy, journeyLevels } from "@/utils/data/journey";
 import { personalData } from "@/utils/data/personal-data";
 import { projectsData } from "@/utils/data/projects-data";
 import { skillGroups } from "@/utils/data/skills";
+import { shareMeta } from "@/utils/share-meta";
+
+const title = "Thuận Phát (Eric) - Cloud Solutions Architect & AI Engineer";
+const description =
+    "Plain, fast version of the portfolio of Phạm Tiến Thuận Phát (English name: Eric): experience, projects, skills, writing and contact.";
 
 export const metadata = {
-    title: "Thuận Phát (Eric) - Cloud Solutions Architect & AI Engineer",
-    description:
-        "Plain, fast version of the portfolio of Phạm Tiến Thuận Phát (English name: Eric): experience, projects, skills, writing and contact.",
+    title,
+    description,
+    ...shareMeta({ title, description, url: "/plain" }),
 };
 
 const caption = (id) => journeyLevels.find((l) => l.id === id)?.caption;

@@ -89,6 +89,7 @@ with the Vietnamese subset — keep it, the name needs those glyphs.
 | `public/textures/*.webp`      | 2K planet textures (Solar System Scope, CC BY 4.0)     |
 | `public/saigon/lights.bin`    | Street-light points from OpenStreetMap (ODbL)          |
 | `app/favicon.ico`             | Site favicon                                           |
+| `public/og.jpg`               | 1200×630 link-preview image, via `utils/share-meta.js` |
 
 ## Common tasks
 
