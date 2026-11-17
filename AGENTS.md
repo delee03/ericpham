@@ -42,7 +42,7 @@ and the plain page read from them, so one edit updates both.
 | Education + certificates                             | `utils/data/educations.js`     | Single list, reverse-chronological                           |
 | Skills                                               | `utils/data/skills.js`         | `skillGroups`, rendered as text                              |
 | Projects                                             | `utils/data/projects-data.js`  | Most recent first; `code`/`demo` links render when non-empty |
-| Contact details                                      | `utils/data/contactsData.js`   | Phone, city, socials; no email on purpose (spam)             |
+| Contact details                                      | `utils/data/contactsData.js`   | City and socials; no email or phone on purpose (spam)        |
 | Page `<title>` and description                       | `app/layout.js`                | `metadata` export                                            |
 
 ### Pages and components

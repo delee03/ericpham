@@ -1,7 +1,6 @@
-// No email address here on purpose: it would be scraped for spam. Visitors use
-// the contact form; the address is only in the CV.
+// No email address or phone number here on purpose: they would be scraped for
+// spam. Visitors use the contact form; both are only in the CV.
 export const contactsData = {
-    phone: "+84 896 555 358",
     address: "Ho Chi Minh City, Vietnam",
     github: "https://github.com/delee03",
     facebook: "https://www.facebook.com/ericpham03/",
