@@ -1,5 +1,6 @@
+// No email address here on purpose: it would be scraped for spam. Visitors use
+// the contact form; the address is only in the CV.
 export const contactsData = {
-    email: "phamtienthuanphat.it@gmail.com",
     phone: "+84 896 555 358",
     address: "Ho Chi Minh City, Vietnam",
     github: "https://github.com/delee03",

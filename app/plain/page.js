@@ -232,11 +232,6 @@ export default async function PlainPage() {
                             <h3 className="font-mono text-xs uppercase tracking-[0.14em] text-sky">Direct</h3>
                             <ul className="mt-3 space-y-1 text-soft">
                                 <li>
-                                    <a href={`mailto:${contactsData.email}`} className={extLink}>
-                                        {contactsData.email}
-                                    </a>
-                                </li>
-                                <li>
                                     <a href={`tel:${contactsData.phone.replace(/\s/g, "")}`} className={extLink}>
                                         {contactsData.phone}
                                     </a>
