@@ -15,27 +15,25 @@ const fieldClass =
     "w-full rounded-[10px] border border-line bg-field px-3 text-[15px] text-ink outline-none transition-colors focus:border-sky";
 
 // Contact form shared by the journey's last level and the plain page.
-// States: idle, sending, sent, plus inline validation and server errors.
+// States: idle, verifying (bot check), sending, sent, plus inline validation
+// and server errors.
 export default function ContactForm() {
     const [values, setValues] = useState(EMPTY);
-    const [status, setStatus] = useState("idle"); // idle | sending | sent
+    const [status, setStatus] = useState("idle"); // idle | verifying | sending | sent
     const [error, setError] = useState("");
-    // The widget loads on first focus, so the third-party script stays off the
-    // page until someone starts writing. `attempt` remounts it for a new token.
-    const [armed, setArmed] = useState(false);
-    const [token, setToken] = useState("");
+    // The Turnstile widget mounts only after the form passes validation on
+    // submit; its token then sends the message. `attempt` gives every send a
+    // fresh widget, since tokens are single use.
     const [attempt, setAttempt] = useState(0);
-    // Set when the widget cannot run here (e.g. localhost or a preview domain);
-    // the form then sends without a token and the server decides.
-    const [widgetFailed, setWidgetFailed] = useState(false);
 
     const set = (key) => (e) => {
         setValues((v) => ({ ...v, [key]: e.target.value }));
         if (error) setError("");
     };
 
-    const submit = async (e) => {
+    const submit = (e) => {
         e.preventDefault();
+        if (status !== "idle") return;
         const name = values.name.trim();
         const email = values.email.trim();
         const message = values.message.trim();
@@ -47,18 +45,26 @@ export default function ContactForm() {
             setError("Please enter a valid email address.");
             return;
         }
-        if (!token && !widgetFailed) {
-            setArmed(true);
-            setError("Please wait for the verification check to finish, then send again.");
-            return;
-        }
+        setError("");
+        setStatus("verifying");
+    };
 
+    // Called by the widget with a token, or with "" when it cannot run here
+    // (e.g. localhost or a preview domain); the server then decides.
+    const send = async (token) => {
+        if (status !== "verifying") return;
         setStatus("sending");
         try {
             const res = await fetch("/api/contact", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ...values, name, email, message, "cf-turnstile-response": token }),
+                body: JSON.stringify({
+                    ...values,
+                    name: values.name.trim(),
+                    email: values.email.trim(),
+                    message: values.message.trim(),
+                    "cf-turnstile-response": token,
+                }),
             });
             const data = await res.json().catch(() => ({}));
             if (!res.ok || !data.success) {
@@ -70,8 +76,6 @@ export default function ContactForm() {
             setError(err.message || "Something went wrong. Please try again later.");
             setStatus("idle");
         } finally {
-            // Tokens are single use: get a fresh one for the next send.
-            setToken("");
             setAttempt((n) => n + 1);
         }
     };
@@ -94,10 +98,12 @@ export default function ContactForm() {
         );
     }
 
+    const verifying = status === "verifying";
     const sending = status === "sending";
+    const busy = verifying || sending;
 
     return (
-        <form onSubmit={submit} onFocus={() => setArmed(true)} noValidate className="flex flex-col gap-3.5">
+        <form onSubmit={submit} noValidate className="flex flex-col gap-3.5">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <label className="flex flex-col gap-1.5 text-[13px] text-muted">
                     Your name
@@ -149,13 +155,13 @@ export default function ContactForm() {
                 onChange={set("company")}
                 className="absolute -left-[9999px] h-px w-px opacity-0"
             />
-            {armed && !widgetFailed && (
+            {busy && (
                 <Turnstile
                     key={attempt}
                     siteKey={TURNSTILE_SITE_KEY}
                     action="contact"
-                    onToken={setToken}
-                    onError={() => setWidgetFailed(true)}
+                    onToken={(token) => token && send(token)}
+                    onError={() => send("")}
                 />
             )}
             {error && (
@@ -165,10 +171,10 @@ export default function ContactForm() {
             )}
             <button
                 type="submit"
-                disabled={sending}
+                disabled={busy}
                 className="h-12 rounded-full bg-gold text-[15px] font-semibold text-[#1A1206] transition-opacity hover:opacity-90 disabled:cursor-wait disabled:opacity-60"
             >
-                {sending ? "Transmitting…" : "Send transmission"}
+                {verifying ? "Verifying…" : sending ? "Transmitting…" : "Send transmission"}
             </button>
         </form>
     );
