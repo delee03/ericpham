@@ -129,7 +129,8 @@ with the Vietnamese subset — keep it, the name needs those glyphs.
 `.env.example` lists the variables. `EMAIL_ADDRESS` and `GMAIL_PASSKEY` (a Gmail
 app password) are required; the Telegram pair is optional and best-effort.
 The Cloudflare Turnstile bot check (widget in `app/components/site/turnstile.jsx`,
-site key in `contact-form.jsx`) is enforced by the API route only when
+site key in `contact-form.jsx`) runs only after the form passes validation on
+submit, and its token sends the message. It is enforced by the API route only when
 `TURNSTILE_SECRET_KEY` is set; tokens must be for the `contact` action and a
 hostname in `TURNSTILE_ALLOWED_HOSTNAMES` (default: the `.com` domain). On
 localhost and preview domains the widget cannot run, so the form sends without
